@@ -1,0 +1,15 @@
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/arduino.json
+!.vscode/c_cpp_properties.json
+*.code-workspace
+build/*
+
+### VisualStudioCode Patch ###
+# Ignore all local history of files
+.history
+.ionide

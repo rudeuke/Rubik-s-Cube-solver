@@ -1,0 +1,7 @@
+{
+    "sketch": "rubiks_solver.ino",
+    "board": "arduino:avr:uno",
+    "programmer": "arduino:avrispmkii",
+    "output": "build",
+    "port": "COM3"
+}
