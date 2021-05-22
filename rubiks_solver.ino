@@ -2,7 +2,7 @@
 
 Servo rotationServo;                    //main rotation servo (MG 996R)
 const int rotationServoPin = 9;
-const int rotationServoAngle1 = 16;
+const int rotationServoAngle1 = 17;
 const int rotationServoAngle2 = 115;
 
 Servo blockServo;                       //2 upper layers block servo (SG90)
@@ -146,7 +146,7 @@ void flipBack(int numberOfTimes){
   for(int i=0; i<numberOfTimes; i++){                         // repeat x times
     
     for(int j=flipServoAngle1; j<flipServoAngle2; j++){       // for slower movement of flip arm
-      delay(7);
+      delay(8);
       flipServo.write(j);
     }
     flipServo.write(flipServoAngle1);
@@ -179,7 +179,7 @@ void flipRight(int numberOfTimes){
   for(int i=0; i<numberOfTimes; i++){                         // repeat x times
     
     for(int j=flipServoAngle1; j<flipServoAngle2; j++){       // for slower movement of flip arm
-      delay(7);
+      delay(8);
       flipServo.write(j);
     }
     flipServo.write(flipServoAngle1);
