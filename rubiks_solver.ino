@@ -17,12 +17,13 @@ const int flipServoAngle2 = 75;
 
 
 int data = 0;
-int waitTime = 300;
-int waitTimeLong = 600;
+const int waitTime = 300;
+const int waitTimeLong = 600;
 
 // sequence of moves
-// char solution[] = {'E', 'V', 'G', 'C', 'S', 'M'};   // temp sequence to make crosses
-char solution[] = {'C', 'd', 'f', 'L'}; //testing sequence
+String algorithm = "EVGCSM";            // temp sequence to make crosses
+// String algorithm = "bdlur";             // test
+
 
 // orientation of cube --- orientation[color] = face
 // COLOR     INDEX   STARTING FACE
@@ -33,12 +34,28 @@ char solution[] = {'C', 'd', 'f', 'L'}; //testing sequence
 // Red        4       Back
 // Yellow     5       Down
 char orientation[] = {'F', 'R', 'U', 'L', 'B', 'D'};
-char tempOrientation[7];
+
+const char facePattern[] = {'F', 'R', 'U', 'L', 'B', 'D'};
+
+String color = "OGWBRY";
+char tempColor[7];
 
 
 
 
 
+
+
+
+void updateOrientation(){
+
+  orientation[0] = facePattern[color.indexOf('O')];
+  orientation[1] = facePattern[color.indexOf('G')];
+  orientation[2] = facePattern[color.indexOf('W')];
+  orientation[3] = facePattern[color.indexOf('B')];
+  orientation[4] = facePattern[color.indexOf('R')];
+  orientation[5] = facePattern[color.indexOf('Y')];
+}
 
 
 
@@ -64,8 +81,23 @@ void turnClockwise(int numberOfTimes){                        // D
     blockServo.write(blockServoAngle1);
     delay(waitTime);
     rotationServo.write(rotationServoAngle1);
-    delay(waitTime);    
+    delay(waitTime);
+
+    tempColor[0] = color[1];
+    tempColor[1] = color[4];
+    // tempColor[2] = color[2];
+    tempColor[3] = color[0];
+    tempColor[4] = color[3];
+    // tempColor[5] = color[5];
+
+    color[0] = tempColor[0];
+    color[1] = tempColor[1];
+    // color[2] = tempColor[2];
+    color[3] = tempColor[3];
+    color[4] = tempColor[4];
+    // color[5] = tempColor[5];
   }
+  updateOrientation();
 }
 
 void turnCounterclockwise(int numberOfTimes){                 // D'
@@ -89,7 +121,22 @@ void turnCounterclockwise(int numberOfTimes){                 // D'
     delay(waitTime);
     blockServo.write(blockServoAngle1);
     delay(waitTime);
+
+    tempColor[0] = color[3];
+    tempColor[1] = color[0];
+    // tempColor[2] = color[2];
+    tempColor[3] = color[4];
+    tempColor[4] = color[1];
+    // tempColor[5] = color[5];
+
+    color[0] = tempColor[0];
+    color[1] = tempColor[1];
+    // color[2] = tempColor[2];
+    color[3] = tempColor[3];
+    color[4] = tempColor[4];
+    // color[5] = tempColor[5];
   }
+  updateOrientation();
 }
 
 void flipBack(int numberOfTimes){
@@ -104,14 +151,56 @@ void flipBack(int numberOfTimes){
     }
     flipServo.write(flipServoAngle1);
     delay(waitTime);
+
+    tempColor[0] = color[5];
+    // tempColor[1] = color[1];
+    tempColor[2] = color[0];
+    // tempColor[3] = color[3];
+    tempColor[4] = color[2];
+    tempColor[5] = color[4];
+
+    color[0] = tempColor[0];
+    // color[1] = tempColor[1];
+    color[2] = tempColor[2];
+    // color[3] = tempColor[3];
+    color[4] = tempColor[4];
+    color[5] = tempColor[5];  
   }
+  updateOrientation();
 }
 
 void flipRight(int numberOfTimes){
 
+  numberOfTimes=numberOfTimes%4;
+
   rotationServo.write(rotationServoAngle2);
   delay(waitTime);
-  flipBack(numberOfTimes);
+
+  for(int i=0; i<numberOfTimes; i++){                         // repeat x times
+    
+    for(int j=flipServoAngle1; j<flipServoAngle2; j++){       // for slower movement of flip arm
+      delay(7);
+      flipServo.write(j);
+    }
+    flipServo.write(flipServoAngle1);
+    delay(waitTime);
+
+    // tempColor[0] = color[0];
+    tempColor[1] = color[2];
+    tempColor[2] = color[3];
+    tempColor[3] = color[5];
+    // tempColor[4] = color[4];
+    tempColor[5] = color[1];
+
+    // color[0] = tempColor[0];
+    color[1] = tempColor[1];
+    color[2] = tempColor[2];
+    color[3] = tempColor[3];
+    // color[4] = tempColor[4];
+    color[5] = tempColor[5];
+  }
+  updateOrientation();
+
   rotationServo.write(rotationServoAngle1);
   delay(waitTime);
 }
@@ -129,376 +218,88 @@ void flipRight(int numberOfTimes){
 void Fr(){
   flipBack(3);
   turnClockwise(1);
-  
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'D', 'F', 'L', 'B', 'U', 'R'}
-  tempOrientation[0] = orientation[5];
-  tempOrientation[1] = orientation[0];
-  tempOrientation[2] = orientation[3];
-  tempOrientation[3] = orientation[4];
-  tempOrientation[4] = orientation[2];
-  tempOrientation[5] = orientation[1];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void Fr2(){
   flipBack(3);
   turnClockwise(2);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'D', 'L', 'B', 'R', 'U', 'F'}
-  tempOrientation[0] = orientation[5];
-  tempOrientation[1] = orientation[3];
-  tempOrientation[2] = orientation[4];
-  tempOrientation[3] = orientation[1];
-  tempOrientation[4] = orientation[2];
-  tempOrientation[5] = orientation[0];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void Frp(){
   flipBack(3);
   turnCounterclockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'D', 'B', 'R', 'F', 'U', 'L'}
-  tempOrientation[0] = orientation[5];
-  tempOrientation[1] = orientation[4];
-  tempOrientation[2] = orientation[1];
-  tempOrientation[3] = orientation[0];
-  tempOrientation[4] = orientation[2];
-  tempOrientation[5] = orientation[3];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void R(){
   flipRight(1);
   turnClockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'L', 'D', 'F', 'U', 'R', 'B'}
-  tempOrientation[0] = orientation[3];
-  tempOrientation[1] = orientation[5];
-  tempOrientation[2] = orientation[0];
-  tempOrientation[3] = orientation[2];
-  tempOrientation[4] = orientation[1];
-  tempOrientation[5] = orientation[4];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void R2(){
   flipRight(1);
   turnClockwise(2);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'B', 'D', 'L', 'U', 'F', 'R'}
-  tempOrientation[0] = orientation[4];
-  tempOrientation[1] = orientation[5];
-  tempOrientation[2] = orientation[3];
-  tempOrientation[3] = orientation[2];
-  tempOrientation[4] = orientation[0];
-  tempOrientation[5] = orientation[1];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void Rp(){
   flipRight(1);
   turnCounterclockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'R', 'D', 'B', 'U', 'L', 'F'}
-  tempOrientation[0] = orientation[1];
-  tempOrientation[1] = orientation[5];
-  tempOrientation[2] = orientation[4];
-  tempOrientation[3] = orientation[2];
-  tempOrientation[4] = orientation[3];
-  tempOrientation[5] = orientation[0];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void U(){
   flipBack(2);
   turnClockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'R', 'F', 'D', 'B', 'L', 'U'}
-  tempOrientation[0] = orientation[1];
-  tempOrientation[1] = orientation[0];
-  tempOrientation[2] = orientation[5];
-  tempOrientation[3] = orientation[4];
-  tempOrientation[4] = orientation[3];
-  tempOrientation[5] = orientation[2];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void U2(){
   flipBack(2);
   turnClockwise(2);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'F', 'L', 'D', 'R', 'B', 'U'}
-  tempOrientation[0] = orientation[0];
-  tempOrientation[1] = orientation[3];
-  tempOrientation[2] = orientation[5];
-  tempOrientation[3] = orientation[1];
-  tempOrientation[4] = orientation[4];
-  tempOrientation[5] = orientation[2];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void Up(){
   flipBack(2);
   turnCounterclockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'L', 'B', 'D', 'F', 'R', 'U'}
-  tempOrientation[0] = orientation[3];
-  tempOrientation[1] = orientation[4];
-  tempOrientation[2] = orientation[5];
-  tempOrientation[3] = orientation[0];
-  tempOrientation[4] = orientation[1];
-  tempOrientation[5] = orientation[2];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void L(){
   flipRight(3);
   turnClockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'L', 'U', 'B', 'D', 'R', 'F'}
-  tempOrientation[0] = orientation[3];
-  tempOrientation[1] = orientation[2];
-  tempOrientation[2] = orientation[4];
-  tempOrientation[3] = orientation[5];
-  tempOrientation[4] = orientation[1];
-  tempOrientation[5] = orientation[0];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void L2(){
   flipRight(3);
   turnClockwise(2);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'B', 'U', 'R', 'D', 'F', 'L'}
-  tempOrientation[0] = orientation[4];
-  tempOrientation[1] = orientation[2];
-  tempOrientation[2] = orientation[1];
-  tempOrientation[3] = orientation[5];
-  tempOrientation[4] = orientation[0];
-  tempOrientation[5] = orientation[3];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void Lp(){
   flipRight(3);
   turnCounterclockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'R', 'U', 'F', 'D', 'L', 'B'}
-  tempOrientation[0] = orientation[1];
-  tempOrientation[1] = orientation[2];
-  tempOrientation[2] = orientation[0];
-  tempOrientation[3] = orientation[5];
-  tempOrientation[4] = orientation[3];
-  tempOrientation[5] = orientation[4];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void B(){
   flipBack(1);
   turnClockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'U', 'F', 'R', 'B', 'D', 'L'}
-  tempOrientation[0] = orientation[2];
-  tempOrientation[1] = orientation[0];
-  tempOrientation[2] = orientation[1];
-  tempOrientation[3] = orientation[4];
-  tempOrientation[4] = orientation[5];
-  tempOrientation[5] = orientation[3];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void B2(){
   flipBack(1);
   turnClockwise(2);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'U', 'L', 'F', 'R', 'D', 'B'}
-  tempOrientation[0] = orientation[2];
-  tempOrientation[1] = orientation[3];
-  tempOrientation[2] = orientation[0];
-  tempOrientation[3] = orientation[1];
-  tempOrientation[4] = orientation[5];
-  tempOrientation[5] = orientation[4];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void Bp(){
   flipBack(1);
   turnCounterclockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'U', 'B', 'L', 'F', 'D', 'R'}
-  tempOrientation[0] = orientation[2];
-  tempOrientation[1] = orientation[4];
-  tempOrientation[2] = orientation[3];
-  tempOrientation[3] = orientation[0];
-  tempOrientation[4] = orientation[5];
-  tempOrientation[5] = orientation[1];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void D(){
   turnClockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'L', 'F', 'U', 'B', 'R', 'D'}
-  tempOrientation[0] = orientation[3];
-  tempOrientation[1] = orientation[0];
-  tempOrientation[2] = orientation[2];
-  tempOrientation[3] = orientation[4];
-  tempOrientation[4] = orientation[1];
-  tempOrientation[5] = orientation[5];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void D2(){
   turnClockwise(2);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'B', 'L', 'U', 'R', 'F', 'D'}
-  tempOrientation[0] = orientation[4];
-  tempOrientation[1] = orientation[3];
-  tempOrientation[2] = orientation[2];
-  tempOrientation[3] = orientation[1];
-  tempOrientation[4] = orientation[0];
-  tempOrientation[5] = orientation[5];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 void Dp(){
   turnCounterclockwise(1);
-
-  //{'F', 'R', 'U', 'L', 'B', 'D'}
-  //{'R', 'B', 'U', 'F', 'L', 'D'}
-  tempOrientation[0] = orientation[1];
-  tempOrientation[1] = orientation[4];
-  tempOrientation[2] = orientation[2];
-  tempOrientation[3] = orientation[0];
-  tempOrientation[4] = orientation[3];
-  tempOrientation[5] = orientation[5];
-
-  orientation[0] = tempOrientation[0];
-  orientation[1] = tempOrientation[1];
-  orientation[2] = tempOrientation[2];
-  orientation[3] = tempOrientation[3];
-  orientation[4] = tempOrientation[4];
-  orientation[5] = tempOrientation[5];
 }
 
 
@@ -613,56 +414,53 @@ void makeMove(char move){
   }
 }
 
-void solve(char solution[]){
+void solve(String moves){
 
-  int numberOfMoves = strlen(solution);
+  int numberOfMoves = moves.length();
 
-  Serial.print("solution: ");
-    for(int i=0; i<numberOfMoves; i++){
-       Serial.print(solution[i]);
-       Serial.print(" ");        
-    }
+  Serial.print("moves: ");
+  for(int i=0; i<numberOfMoves; i++){
+    Serial.print(moves[i]);
+    Serial.print(" ");        
+  }
 
-  Serial.println("");
+  // Serial.println("");
 
-  Serial.print("orientation: ");
-    for(int j=0; j<6; j++){
-      Serial.print(orientation[j]);
-      Serial.print(" "); 
-    }
+  // Serial.print("orientation: ");
+  // for(int j=0; j<6; j++){
+  //   Serial.print(orientation[j]);
+  //   Serial.print(" "); 
+  // }
 
-  Serial.println("");
+  // Serial.println("");
 
 
 
 
   for(int i=0; i<numberOfMoves; i++){
 
-    Serial.println("");
+    // Serial.println("");
 
-    Serial.print("next move: ");
-    Serial.print(solution[i]);
+    // Serial.print("next move: ");
+    // Serial.print(moves[i]);
 
-    Serial.println("");
+    // Serial.println("");
 
-    Serial.print("orientation: ");      //for debugging
-    for(int j=0; j<6; j++){
-      Serial.print(orientation[j]);
-      Serial.print(" "); 
-    }
+    // Serial.print("orientation: ");      //for debugging
+    // for(int j=0; j<6; j++){
+    //   Serial.print(orientation[j]);
+    //   Serial.print(" "); 
+    // }
 
-    Serial.println("");
+    // Serial.println("");
 
-    Serial.print("after decode: ");
-    Serial.print(decode(solution[i]));
+    // Serial.print("after decode: ");
+    // Serial.print(decode(moves[i]));
     
-    Serial.println("");
+    // Serial.println("");
 
-    char nextMove = decode(solution[i]);
+    char nextMove = decode(moves[i]);
     makeMove(nextMove);
-
-
-    delay(5000);
   }
 }
 
@@ -686,9 +484,6 @@ void setup() {
 
   flipServo.attach(flipServoPin);
   flipServo.write(flipServoAngle1);
-
-  delay(5000);
-  solve(solution);
 }
 
 
@@ -697,22 +492,22 @@ void setup() {
 
 void loop() {
 
-  // if(Serial.available() > 0){     //testing
-  //   data=Serial.read();
-  //   Serial.println(data);
+  if(Serial.available() > 0){     //testing
+    data=Serial.read();
+    Serial.println(data);
 
-  //   if(data==49){
+    if(data==49){
 
-  //     solve(solution);
-  //     // Fr2();
+      solve(algorithm);
+      // flipBack(1);
 
-  //   }
-  //   else if(data==50){
+    }
+    else if(data==50){
 
-  //     // B();
+      // flipRight(1);
 
-  //   }
+    }
 
-  // data=0;
-
+    data=0;
+  }
 }
