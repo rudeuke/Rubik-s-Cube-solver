@@ -2,7 +2,7 @@
 
 Servo rotationServo;                    //main rotation servo (MG 996R)
 const int rotationServoPin = 9;
-const int rotationServoAngle1 = 17;
+const int rotationServoAngle1 = 19;
 const int rotationServoAngle2 = 115;
 
 Servo blockServo;                       //2 upper layers block servo (SG90)
@@ -22,22 +22,20 @@ const int waitTimeLong = 600;
 
 // sequence of moves
 String algorithm = "EVGCSM";            // temp sequence to make crosses
-// String algorithm = "bdlur";             // test
-
 
 // orientation of cube --- orientation[color] = face
 // COLOR     INDEX   STARTING FACE
-// Orange     0       Front
-// Green      1       Right
-// White      2       Up
-// Blue       3       Left
-// Red        4       Back
-// Yellow     5       Down
-char orientation[] = {'F', 'R', 'U', 'L', 'B', 'D'};
+// White      0       Up
+// Red        1       Right
+// Green      2       Front
+// Yellow     3       Down
+// Orange     4       Left
+// Blue       5       Back
+char orientation[] = {'U', 'R', 'F', 'D', 'L', 'B'};
 
-const char facePattern[] = {'F', 'R', 'U', 'L', 'B', 'D'};
+const char facePattern[] = {'U', 'R', 'F', 'D', 'L', 'B'};
 
-String color = "OGWBRY";
+String color = "WRGYOB";
 char tempColor[7];
 
 
@@ -49,12 +47,12 @@ char tempColor[7];
 
 void updateOrientation(){
 
-  orientation[0] = facePattern[color.indexOf('O')];
-  orientation[1] = facePattern[color.indexOf('G')];
-  orientation[2] = facePattern[color.indexOf('W')];
-  orientation[3] = facePattern[color.indexOf('B')];
-  orientation[4] = facePattern[color.indexOf('R')];
-  orientation[5] = facePattern[color.indexOf('Y')];
+  orientation[0] = facePattern[color.indexOf('W')];
+  orientation[1] = facePattern[color.indexOf('R')];
+  orientation[2] = facePattern[color.indexOf('G')];
+  orientation[3] = facePattern[color.indexOf('Y')];
+  orientation[4] = facePattern[color.indexOf('O')];
+  orientation[5] = facePattern[color.indexOf('B')];
 }
 
 
@@ -74,7 +72,7 @@ void turnClockwise(int numberOfTimes){                        // D
     }
 
     delay(waitTime);
-    rotationServo.write(rotationServoAngle2+10);
+    rotationServo.write(rotationServoAngle2+14);
     delay(waitTimeLong);
     rotationServo.write(rotationServoAngle2);
     delay(waitTime);
@@ -83,19 +81,19 @@ void turnClockwise(int numberOfTimes){                        // D
     rotationServo.write(rotationServoAngle1);
     delay(waitTime);
 
-    tempColor[0] = color[1];
-    tempColor[1] = color[4];
-    // tempColor[2] = color[2];
-    tempColor[3] = color[0];
-    tempColor[4] = color[3];
-    // tempColor[5] = color[5];
+    // tempColor[0] = color[0];
+    tempColor[1] = color[5];
+    tempColor[2] = color[1];
+    // tempColor[3] = color[3];
+    tempColor[4] = color[2];
+    tempColor[5] = color[4];
 
-    color[0] = tempColor[0];
+    // color[0] = tempColor[0];
     color[1] = tempColor[1];
-    // color[2] = tempColor[2];
-    color[3] = tempColor[3];
+    color[2] = tempColor[2];
+    // color[3] = tempColor[3];
     color[4] = tempColor[4];
-    // color[5] = tempColor[5];
+    color[5] = tempColor[5];
   }
   updateOrientation();
 }
@@ -122,19 +120,19 @@ void turnCounterclockwise(int numberOfTimes){                 // D'
     blockServo.write(blockServoAngle1);
     delay(waitTime);
 
-    tempColor[0] = color[3];
-    tempColor[1] = color[0];
-    // tempColor[2] = color[2];
-    tempColor[3] = color[4];
-    tempColor[4] = color[1];
-    // tempColor[5] = color[5];
+    // tempColor[0] = color[0];
+    tempColor[1] = color[2];
+    tempColor[2] = color[4];
+    // tempColor[3] = color[3];
+    tempColor[4] = color[5];
+    tempColor[5] = color[1];
 
-    color[0] = tempColor[0];
+    // color[0] = tempColor[0];
     color[1] = tempColor[1];
-    // color[2] = tempColor[2];
-    color[3] = tempColor[3];
+    color[2] = tempColor[2];
+    // color[3] = tempColor[3];
     color[4] = tempColor[4];
-    // color[5] = tempColor[5];
+    color[5] = tempColor[5];
   }
   updateOrientation();
 }
@@ -152,18 +150,18 @@ void flipBack(int numberOfTimes){
     flipServo.write(flipServoAngle1);
     delay(waitTime);
 
-    tempColor[0] = color[5];
+    tempColor[0] = color[2];
     // tempColor[1] = color[1];
-    tempColor[2] = color[0];
-    // tempColor[3] = color[3];
-    tempColor[4] = color[2];
-    tempColor[5] = color[4];
+    tempColor[2] = color[3];
+    tempColor[3] = color[5];
+    // tempColor[4] = color[4];
+    tempColor[5] = color[0];
 
     color[0] = tempColor[0];
     // color[1] = tempColor[1];
     color[2] = tempColor[2];
-    // color[3] = tempColor[3];
-    color[4] = tempColor[4];
+    color[3] = tempColor[3];
+    // color[4] = tempColor[4];
     color[5] = tempColor[5];  
   }
   updateOrientation();
@@ -185,19 +183,19 @@ void flipRight(int numberOfTimes){
     flipServo.write(flipServoAngle1);
     delay(waitTime);
 
-    // tempColor[0] = color[0];
-    tempColor[1] = color[2];
-    tempColor[2] = color[3];
-    tempColor[3] = color[5];
-    // tempColor[4] = color[4];
-    tempColor[5] = color[1];
+    tempColor[0] = color[4];
+    tempColor[1] = color[0];
+    // tempColor[2] = color[2];
+    tempColor[3] = color[1];
+    tempColor[4] = color[3];
+    // tempColor[5] = color[5];
 
-    // color[0] = tempColor[0];
+    color[0] = tempColor[0];
     color[1] = tempColor[1];
-    color[2] = tempColor[2];
+    // color[2] = tempColor[2];
     color[3] = tempColor[3];
-    // color[4] = tempColor[4];
-    color[5] = tempColor[5];
+    color[4] = tempColor[4];
+    // color[5] = tempColor[5];
   }
   updateOrientation();
 
@@ -315,25 +313,25 @@ void Dp(){
 char decode(char face){
 
   switch(face){
-    case 'F': return orientation[0];      // ascii table
-    case 'f': return orientation[0]+32;
-    case 'G': return orientation[0]+1;
+    case 'U': return orientation[0];      // ascii table
+    case 'u': return orientation[0]+32;
+    case 'V': return orientation[0]+1;
     case 'R': return orientation[1];
     case 'r': return orientation[1]+32;
     case 'S': return orientation[1]+1;
-    case 'U': return orientation[2];
-    case 'u': return orientation[2]+32;
-    case 'V': return orientation[2]+1;
-    case 'L': return orientation[3];
-    case 'l': return orientation[3]+32;
-    case 'M': return orientation[3]+1;
-    case 'B': return orientation[4];
-    case 'b': return orientation[4]+32;
-    case 'C': return orientation[4]+1;
-    case 'D': return orientation[5];
-    case 'd': return orientation[5]+32;
-    case 'E': return orientation[5]+1;
-    default:  return 'a';
+    case 'F': return orientation[2];
+    case 'f': return orientation[2]+32;
+    case 'G': return orientation[2]+1;
+    case 'D': return orientation[3];
+    case 'd': return orientation[3]+32;
+    case 'E': return orientation[3]+1;
+    case 'L': return orientation[4];
+    case 'l': return orientation[4]+32;
+    case 'M': return orientation[4]+1;
+    case 'B': return orientation[5];
+    case 'b': return orientation[5]+32;
+    case 'C': return orientation[5]+1;
+    default:  return 'a';                 // error
   }
 }
 
