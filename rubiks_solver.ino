@@ -16,12 +16,12 @@ const int flipServoAngle1 = 15;
 const int flipServoAngle2 = 75;
 
 
-int data = 0;
 const int waitTime = 300;
 const int waitTimeLong = 600;
 
 // sequence of moves
-String algorithm = "EVGCSM";            // temp sequence to make crosses
+// String algorithm = "EVGCSM";            // temp sequence to make crosses
+String algorithm = "";
 
 // orientation of cube --- orientation[color] = face
 // COLOR     INDEX   STARTING FACE
@@ -490,22 +490,19 @@ void setup() {
 
 void loop() {
 
-  if(Serial.available() > 0){     //testing
-    data=Serial.read();
-    Serial.println(data);
+  // serialEvent used to perform operations
 
-    if(data==49){
+}
 
-      solve(algorithm);
-      // flipBack(1);
 
-    }
-    else if(data==50){
 
-      // flipRight(1);
 
-    }
 
-    data=0;
+void serialEvent() {
+
+  algorithm = Serial.readString();
+
+  if (algorithm){
+    solve(algorithm);
   }
 }

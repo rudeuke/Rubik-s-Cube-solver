@@ -1,6 +1,7 @@
 import cv2
 import numpy
 import kociemba
+import serial
 
 
 
@@ -10,6 +11,8 @@ alreadyDetected = []
 solution = []
 captureCamera = cv2.VideoCapture(0)
 preview = numpy.zeros((700,800,3), numpy.uint8)
+arduinoPort = serial.Serial('COM3', 9600)
+arduinoPort.timeout = 1
 
 
 
@@ -235,6 +238,7 @@ def serializeOutput(algorithm):
         elif move == 'B2':
             serialized += 'C'
 
+    serialized += '\n'
     return serialized
 
 
@@ -295,9 +299,13 @@ if __name__ == '__main__':
             if len(set(alreadyDetected)) == 6:
                 try:
                     solution = kociemba.solve(serializeInput(permutation))
+                    
                     if solution:
                         print(solution)
                         print(serializeOutput(solution))
+
+                        arduinoPort.write(serializeOutput(solution).encode())
+
                 except:
                     print("Detection error")
             else:
