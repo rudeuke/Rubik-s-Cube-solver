@@ -43,9 +43,10 @@ void ServoHandler::basePosition2(int offset)
 
 void ServoHandler::armFlip()
 {
+    delay(_waitVeryShort);
     for (int j = FLIP_SERVO.angle1; j < FLIP_SERVO.angle2; j++)
     { // for slower movement of flip arm
-        delay(6);
+        delay(7);
         FLIP_SERVO.servo.write(j);
     }
     FLIP_SERVO.servo.write(FLIP_SERVO.angle1);

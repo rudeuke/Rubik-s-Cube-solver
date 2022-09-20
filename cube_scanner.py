@@ -4,27 +4,20 @@ import kociemba
 import serial
 
 
-
-
-
 alreadyDetected = []
 solution = []
-captureCamera = cv2.VideoCapture(0)
-preview = numpy.zeros((700,800,3), numpy.uint8)
-arduinoPort = serial.Serial('COM3', 9600)
-arduinoPort.timeout = 1
-
-
-
+captureCamera = cv2.VideoCapture(1)
+preview = numpy.zeros((700, 800, 3), numpy.uint8)
+arduinoPort = serial.Serial('COM3', baudrate=9600, timeout=0.1)
 
 
 colorBGR = {
-    'W': (255,255,255),
-    'R': (0,0,255),
-    'G': (0,255,0),
-    'Y': (0,255,255),
-    'O': (0,165,255),
-    'B': (255,0,0),
+    'W': (255, 255, 255),
+    'R': (0, 0, 255),
+    'G': (0, 255, 0),
+    'Y': (0, 255, 255),
+    'O': (0, 165, 255),
+    'B': (255, 0, 0),
 }
 
 # for masking
@@ -67,7 +60,7 @@ stickerCoordinates = {
         [188, 434], [232, 434], [276, 434],
         [188, 478], [232, 478], [276, 478],
         [188, 522], [232, 522], [276, 522]
-    ], 
+    ],
     'L': [
         [50, 280], [94, 280], [138, 280],
         [50, 324], [94, 324], [138, 324],
@@ -78,8 +71,8 @@ stickerCoordinates = {
         [464, 324], [508, 324], [552, 324],
         [464, 368], [508, 368], [552, 368]
     ],
-    
-    
+
+
     'preview': [
         [120, 130], [54, 130], [88, 130],
         [120, 164], [54, 164], [88, 164],
@@ -88,12 +81,12 @@ stickerCoordinates = {
 }
 
 faceLetter = {
-    'U':['U', 242, 202],
-    'R':['R', 380, 354],
-    'F':['F', 242, 354],
-    'D':['D', 242, 508],
-    'L':['L', 104, 354],
-    'B':['B', 518, 354],
+    'U': ['U', 242, 202],
+    'R': ['R', 380, 354],
+    'F': ['F', 242, 354],
+    'D': ['D', 242, 508],
+    'L': ['L', 104, 354],
+    'B': ['B', 518, 354],
 }
 
 colorToFace = {
@@ -115,23 +108,19 @@ permutation = {
 }
 
 
-
-
-
 def drawCameraMarkers():
 
     for x, y in stickerCoordinates['cameraMarkers']:
         cv2.rectangle(cam, (x, y), (x + 30, y + 30), (255, 255, 255), 1)
 
 
-
 def drawStickers(window, face, arrangement):
 
     stickerNumber = 0
     for x, y in stickerCoordinates[face]:
-        cv2.rectangle(window, (x, y), (x + 40, y + 40), colorBGR[arrangement[stickerNumber]], -1)
+        cv2.rectangle(window, (x, y), (x + 40, y + 40),
+                      colorBGR[arrangement[stickerNumber]], -1)
         stickerNumber += 1
-
 
 
 def drawFaceLetters():
@@ -140,33 +129,36 @@ def drawFaceLetters():
         letter = faceLetter[face][0]
         x = faceLetter[face][1]
         y = faceLetter[face][2]
-        cv2.putText(preview, letter, (x, y), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)  
-
+        cv2.putText(preview, letter, (x, y),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 0), 2, cv2.LINE_AA)
 
 
 def detectColor(h, s, v):
 
-    if s <=30 and v >= 70:
+    if s <= 20 and v >= 80:
         return 'W'
 
     elif s >= 140 and v >= 40:
-        if h >= 160 and h < 180:
+        # if h >= 160 and h < 180:
+        if h < 10:
             return 'R'
-        
-        elif h >= 55 and h < 75:
+
+        # elif h >= 55 and h < 75:
+        elif h >= 70 and h < 90:
             return 'G'
-                    
+
         elif h >= 20 and h < 35:
+            # elif h >= 15 and h < 35:
             return 'Y'
-                    
-        elif h < 20:
+
+        # elif h < 20:
+        elif h >= 10 and h < 20:
             return 'O'
-                    
+
         elif h >= 95 and h < 110:
             return 'B'
 
     return 'W'
-
 
 
 def serializeInput(permutation):
@@ -177,7 +169,6 @@ def serializeInput(permutation):
             serialized += colorToFace[j]
 
     return serialized
-
 
 
 def serializeOutput(algorithm):
@@ -242,78 +233,124 @@ def serializeOutput(algorithm):
     return serialized
 
 
+while True:
+    ret, cam = captureCamera.read()
+    HSVFrame = cv2.cvtColor(cam, cv2.COLOR_BGR2HSV)
+    faceDetected = []
+
+    for i in range(9):
+        detectedHSV = HSVFrame[stickerCoordinates['cameraMarkers'][i]
+                               [1] + 20][stickerCoordinates['cameraMarkers'][i][0] + 20]
+        faceDetected.append(detectColor(
+            detectedHSV[0], detectedHSV[1], detectedHSV[2]))
+
+    drawCameraMarkers()
+    drawStickers(cam, 'detected', faceDetected)
+    for face in permutation:
+        drawStickers(preview, face, permutation[face])
+    drawFaceLetters()
 
 
+# automatic detection
+    keyPressed = cv2.waitKey(1) & 0xFF
 
-if __name__ == '__main__':
+    if keyPressed == 27:
+        break
 
-    while True:
-        ret, cam = captureCamera.read()
-        HSVFrame = cv2.cvtColor(cam, cv2.COLOR_BGR2HSV)
-        faceDetected = []
+    elif keyPressed == ord('1'):
+        arduinoPort.write('1'.encode())
+
+    elif keyPressed == ord('\r'):
+        if len(set(alreadyDetected)) == 6:
+            try:
+                solution = kociemba.solve(serializeInput(permutation))
+
+                if solution:
+                    print(solution)
+                    print(serializeOutput(solution))
+
+                    arduinoPort.write(serializeOutput(solution).encode())
+
+            except:
+                print("Detection error")
+        else:
+            print("You need to scan all sides")
+
+    arduinoData = arduinoPort.read().decode('ascii')
+    print(arduinoData)
+
+    if arduinoData == 'U':
+        alreadyDetected.append('U')
+        permutation['U'] = faceDetected
+
+    elif arduinoData == 'R':
+        alreadyDetected.append('R')
+        permutation['R'] = faceDetected
+
+    elif arduinoData == 'L':
+        alreadyDetected.append('L')
+        permutation['L'] = faceDetected
+
+    elif arduinoData == 'D':
+        alreadyDetected.append('D')
+        permutation['D'] = faceDetected
+
+    elif arduinoData == 'F':
+        alreadyDetected.append('F')
+        permutation['F'] = faceDetected
+
+    elif arduinoData == 'B':
+        alreadyDetected.append('B')
+        permutation['B'] = faceDetected
+
+    # manual detection
+    # keyPressed = cv2.waitKey(1) & 0xFF
+
+    # if keyPressed == 27:
+    #     break
+
+    # elif keyPressed == ord('u'):
+    #     alreadyDetected.append('U')
+    #     permutation['U'] = faceDetected
+
+    # elif keyPressed == ord('r'):
+    #     alreadyDetected.append('R')
+    #     permutation['R'] = faceDetected
+
+    # elif keyPressed == ord('l'):
+    #     alreadyDetected.append('L')
+    #     permutation['L'] = faceDetected
+
+    # elif keyPressed == ord('d'):
+    #     alreadyDetected.append('D')
+    #     permutation['D'] = faceDetected
+
+    # elif keyPressed == ord('f'):
+    #     alreadyDetected.append('F')
+    #     permutation['F'] = faceDetected
+
+    # elif keyPressed == ord('b'):
+    #     alreadyDetected.append('B')
+    #     permutation['B'] = faceDetected
+
+    elif keyPressed == ord('\r'):
+        if len(set(alreadyDetected)) == 6:
+            try:
+                solution = kociemba.solve(serializeInput(permutation))
+
+                if solution:
+                    print(solution)
+                    print(serializeOutput(solution))
+
+                    arduinoPort.write(serializeOutput(solution).encode())
+
+            except:
+                print("Detection error")
+        else:
+            print("You need to scan all sides")
+
+    cv2.imshow('Cube scheme', preview)
+    cv2.imshow('Detection', cam[0:500, 0:500])
 
 
-
-        for i in range(9):
-            detectedHSV = HSVFrame[stickerCoordinates['cameraMarkers'][i][1] + 20][stickerCoordinates['cameraMarkers'][i][0] + 20]
-            faceDetected.append(detectColor(detectedHSV[0], detectedHSV[1], detectedHSV[2]))
-
-        drawCameraMarkers()
-        drawStickers(cam, 'detected', faceDetected)
-        for face in permutation:
-            drawStickers(preview, face, permutation[face])
-        drawFaceLetters()
-
-
-
-        keyPressed = cv2.waitKey(1) & 0xFF
-
-        if keyPressed == 27:
-            break
-
-        elif keyPressed == ord('u'):
-            alreadyDetected.append('U')
-            permutation['U'] = faceDetected
-
-        elif keyPressed == ord('r'):
-            alreadyDetected.append('R')
-            permutation['R'] = faceDetected
-
-        elif keyPressed == ord('l'):
-            alreadyDetected.append('L')
-            permutation['L'] = faceDetected
-
-        elif keyPressed == ord('d'):
-            alreadyDetected.append('D')
-            permutation['D'] = faceDetected
-
-        elif keyPressed == ord('f'):
-            alreadyDetected.append('F')
-            permutation['F'] = faceDetected
-
-        elif keyPressed == ord('b'):
-            alreadyDetected.append('B')
-            permutation['B'] = faceDetected
-
-        elif keyPressed == ord('\r'):
-            if len(set(alreadyDetected)) == 6:
-                try:
-                    solution = kociemba.solve(serializeInput(permutation))
-                    
-                    if solution:
-                        print(solution)
-                        print(serializeOutput(solution))
-
-                        arduinoPort.write(serializeOutput(solution).encode())
-
-                except:
-                    print("Detection error")
-            else:
-                print("You need to scan all sides")
-
-
-        cv2.imshow('Cube scheme', preview)
-        cv2.imshow('Detection', cam[0:500, 0:500])
-
-
-    cv2.destroyAllWindows()
+cv2.destroyAllWindows()

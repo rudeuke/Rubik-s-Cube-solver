@@ -1,0 +1,7 @@
+{
+    "board": "arduino:avr:uno",
+    "port": "COM3",
+    "programmer": "arduino:avrispmkii",
+    "sketch": "solver\\solver.ino",
+    "output": "./build"
+}

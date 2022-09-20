@@ -6,7 +6,7 @@
 
 Cube myCube;
 String data = "";
-String algorithm = "EVGCSM";    // temporary sequence to make crosses
+String algorithm = "EVGCSM"; // temporary sequence to make crosses
 
 void setup()
 {
@@ -29,14 +29,15 @@ void loop()
         data = Serial.readString();
         Serial.println("Data: " + data);
 
-        if (data == "f\n")
-        {
-            ServoHandler::flipBack();
-        }
-        else if (data == "t\n")
-        {
-            ServoHandler::turnClockwise();
-        }
+        // FOR TESTING
+        // if (data == "f\n")
+        // {
+        //     ServoHandler::flipBack();
+        // }
+        // else if (data == "t\n")
+        // {
+        //     ServoHandler::turnClockwise();
+        // }
         // else if (data == "1\n")
         // {
         //     BLOCK_SERVO.servo.write(BLOCK_SERVO.angle1);
@@ -61,24 +62,23 @@ void loop()
         // {
         //     FLIP_SERVO.servo.write(FLIP_SERVO.angle2);
         // }
-        else if (data == "scan\n")
+        // else if (data == "scan\n")
+        // {
+        //     myCube.scan();
+        // }
+        // else if (data == "solve\n")
+        // {
+        //     myCube.solve(algorithm);
+        // }
+
+        if (data != "1")
+        {
+            algorithm = data;
+            myCube.solve(algorithm);
+        }
+        else
         {
             myCube.scan();
         }
-        else if (data == "solve\n")
-        {
-            myCube.solve(algorithm);
-        }
-
-        //        if (data != "1")
-        //        {
-        //            algorithm = data;
-        //            solve(algorithm);
-        //        }
-        //
-        //        else
-        //        {
-        //            scanCube();
-        //        }
     }
 }

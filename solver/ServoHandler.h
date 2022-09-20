@@ -11,6 +11,7 @@ public:
     static void initialiseScan();
 
 private:
+    const static int _waitVeryShort = 50;
     const static int _waitShort = 150;
     const static int _waitMedium = 300;
     const static int _waitLong = 450;
