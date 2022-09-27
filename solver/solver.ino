@@ -4,7 +4,6 @@
 #include "ServoHandler.h"
 #include "Cube.h"
 
-Cube myCube;
 String data = "";
 String algorithm = "EVGCSM"; // temporary sequence to make crosses
 
@@ -26,50 +25,8 @@ void loop()
 {
     if (Serial.available() > 0)
     {
+        Cube myCube;
         data = Serial.readString();
-        Serial.println("Data: " + data);
-
-        // FOR TESTING
-        // if (data == "f\n")
-        // {
-        //     ServoHandler::flipBack();
-        // }
-        // else if (data == "t\n")
-        // {
-        //     ServoHandler::turnClockwise();
-        // }
-        // else if (data == "1\n")
-        // {
-        //     BLOCK_SERVO.servo.write(BLOCK_SERVO.angle1);
-        // }
-        // else if (data == "2\n")
-        // {
-        //     BLOCK_SERVO.servo.write(BLOCK_SERVO.angle2);
-        // }
-        // else if (data == "3\n")
-        // {
-        //     ROTATION_SERVO.servo.write(ROTATION_SERVO.angle1);
-        // }
-        // else if (data == "4\n")
-        // {
-        //     ROTATION_SERVO.servo.write(ROTATION_SERVO.angle2);
-        // }
-        // else if (data == "5\n")
-        // {
-        //     FLIP_SERVO.servo.write(FLIP_SERVO.angle1);
-        // }
-        // else if (data == "6\n")
-        // {
-        //     FLIP_SERVO.servo.write(FLIP_SERVO.angle2);
-        // }
-        // else if (data == "scan\n")
-        // {
-        //     myCube.scan();
-        // }
-        // else if (data == "solve\n")
-        // {
-        //     myCube.solve(algorithm);
-        // }
 
         if (data != "1")
         {
@@ -82,3 +39,45 @@ void loop()
         }
     }
 }
+
+// FOR TESTING
+// if (data == "f\n")
+// {
+//     ServoHandler::flipBack();
+// }
+// else if (data == "t\n")
+// {
+//     ServoHandler::turnClockwise();
+// }
+// else if (data == "1\n")
+// {
+//     BLOCK_SERVO.servo.write(BLOCK_SERVO.angle1);
+// }
+// else if (data == "2\n")
+// {
+//     BLOCK_SERVO.servo.write(BLOCK_SERVO.angle2);
+// }
+// else if (data == "3\n")
+// {
+//     ROTATION_SERVO.servo.write(ROTATION_SERVO.angle1);
+// }
+// else if (data == "4\n")
+// {
+//     ROTATION_SERVO.servo.write(ROTATION_SERVO.angle2);
+// }
+// else if (data == "5\n")
+// {
+//     FLIP_SERVO.servo.write(FLIP_SERVO.angle1);
+// }
+// else if (data == "6\n")
+// {
+//     FLIP_SERVO.servo.write(FLIP_SERVO.angle2);
+// }
+// else if (data == "scan\n")
+// {
+//     myCube.scan();
+// }
+// else if (data == "solve\n")
+// {
+//     myCube.solve(algorithm);
+// }

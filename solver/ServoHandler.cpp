@@ -100,32 +100,32 @@ void ServoHandler::initialiseScan()
 {
     basePosition2();
     delay(_waitScan);
-    Serial.println("U");
+    Serial.println("u");
 
     basePosition1();
     armFlip();
     basePosition2();
     delay(_waitScan);
-    Serial.println("F");
+    Serial.println("f");
 
     armFlip();
     delay(_waitScan);
-    Serial.println("L");
+    Serial.println("l");
 
     armFlip();
     delay(_waitScan);
-    Serial.println("B");
+    Serial.println("b");
 
     armFlip();
     delay(_waitScan);
-    Serial.println("R");
+    Serial.println("r");
 
     armFlip();
     basePosition1();
     armFlip();
     basePosition2();
     delay(_waitScan);
-    Serial.println("D");
+    Serial.println("d");
 
     basePosition1();
     armFlip();

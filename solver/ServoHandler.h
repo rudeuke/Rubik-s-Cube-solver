@@ -13,8 +13,8 @@ public:
 private:
     const static int _waitVeryShort = 50;
     const static int _waitShort = 150;
-    const static int _waitMedium = 300;
-    const static int _waitLong = 450;
+    const static int _waitMedium = 250;
+    const static int _waitLong = 425;
     const static int _waitScan = 1200;
 
     static void blockCube();
