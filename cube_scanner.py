@@ -6,7 +6,7 @@ import serial
 
 alreadyDetected = []
 solution = []
-captureCamera = cv2.VideoCapture(1)
+captureCamera = cv2.VideoCapture(1, cv2.CAP_DSHOW)
 preview = numpy.zeros((700, 800, 3), numpy.uint8)
 arduinoPort = serial.Serial('COM3', baudrate=9600, timeout=0.1)
 
@@ -19,16 +19,6 @@ colorBGR = {
     'O': (0, 165, 255),
     'B': (255, 0, 0),
 }
-
-# for masking
-# colorHSV = {
-#     'W': [numpy.array([0, 0, 70]), numpy.array([180, 30, 255])],
-#     'R': [numpy.array([160, 140, 40]), numpy.array([180, 255, 255])],
-#     'G': [numpy.array([55, 140, 40]), numpy.array([75, 255, 255])],
-#     'Y': [numpy.array([20, 140, 40]), numpy.array([35, 255, 255])],
-#     'O': [numpy.array([0, 140, 40]), numpy.array([20, 255, 255])],
-#     'B': [numpy.array([95, 140, 40]), numpy.array([110, 255, 255])],
-# }
 
 stickerCoordinates = {
     'cameraMarkers': [
@@ -135,29 +125,17 @@ def drawFaceLetters():
 
 def detectColor(h, s, v):
 
-    if s <= 20 and v >= 80:
-        return 'W'
-
-    elif s >= 140 and v >= 40:
-        # if h >= 160 and h < 180:
-        if h < 10:
+    if 180 < s or v < 230:
+        if 170 < h or h <= 5:
             return 'R'
-
-        # elif h >= 55 and h < 75:
-        elif h >= 70 and h < 90:
-            return 'G'
-
-        elif h >= 20 and h < 35:
-            # elif h >= 15 and h < 35:
-            return 'Y'
-
-        # elif h < 20:
-        elif h >= 10 and h < 20:
+        elif 5 < h <= 25:
             return 'O'
-
-        elif h >= 95 and h < 110:
+        elif 25 < h <= 50:
+            return 'Y'
+        elif 65 < h <= 95:
+            return 'G'
+        elif 95 < h <= 110:
             return 'B'
-
     return 'W'
 
 
@@ -177,55 +155,38 @@ def serializeOutput(algorithm):
     for move in algorithm.split():
         if move == 'U':
             serialized += 'U'
-
         elif move == 'U\'':
             serialized += 'u'
-
         elif move == 'U2':
             serialized += 'V'
-
         elif move == 'R':
             serialized += 'R'
-
         elif move == 'R\'':
             serialized += 'r'
-
         elif move == 'R2':
             serialized += 'S'
-
         elif move == 'F':
             serialized += 'F'
-
         elif move == 'F\'':
             serialized += 'f'
-
         elif move == 'F2':
             serialized += 'G'
-
         elif move == 'D':
             serialized += 'D'
-
         elif move == 'D\'':
             serialized += 'd'
-
         elif move == 'D2':
             serialized += 'E'
-
         elif move == 'L':
             serialized += 'L'
-
         elif move == 'L\'':
             serialized += 'l'
-
         elif move == 'L2':
             serialized += 'M'
-
         elif move == 'B':
             serialized += 'B'
-
         elif move == 'B\'':
             serialized += 'b'
-
         elif move == 'B2':
             serialized += 'C'
 
@@ -243,6 +204,7 @@ while True:
                                [1] + 20][stickerCoordinates['cameraMarkers'][i][0] + 20]
         faceDetected.append(detectColor(
             detectedHSV[0], detectedHSV[1], detectedHSV[2]))
+        # print(f"{i}: H={detectedHSV[0]} S={detectedHSV[1]} V={detectedHSV[2]}")
 
     drawCameraMarkers()
     drawStickers(cam, 'detected', faceDetected)
@@ -250,8 +212,6 @@ while True:
         drawStickers(preview, face, permutation[face])
     drawFaceLetters()
 
-
-# automatic detection
     keyPressed = cv2.waitKey(1) & 0xFF
 
     if keyPressed == 27:
@@ -276,81 +236,60 @@ while True:
         else:
             print("You need to scan all sides")
 
-    arduinoData = arduinoPort.read().decode('ascii')
-    print(arduinoData)
-
-    if arduinoData == 'U':
+    # manual detection
+    elif keyPressed == ord('u'):
         alreadyDetected.append('U')
         permutation['U'] = faceDetected
 
-    elif arduinoData == 'R':
+    elif keyPressed == ord('r'):
         alreadyDetected.append('R')
         permutation['R'] = faceDetected
 
-    elif arduinoData == 'L':
+    elif keyPressed == ord('l'):
         alreadyDetected.append('L')
         permutation['L'] = faceDetected
 
-    elif arduinoData == 'D':
+    elif keyPressed == ord('d'):
         alreadyDetected.append('D')
         permutation['D'] = faceDetected
 
-    elif arduinoData == 'F':
+    elif keyPressed == ord('f'):
         alreadyDetected.append('F')
         permutation['F'] = faceDetected
 
-    elif arduinoData == 'B':
+    elif keyPressed == ord('b'):
         alreadyDetected.append('B')
         permutation['B'] = faceDetected
 
-    # manual detection
-    # keyPressed = cv2.waitKey(1) & 0xFF
+    # automatic detection
+    arduinoData = arduinoPort.read().decode('ascii')
+    # print(arduinoData)
 
-    # if keyPressed == 27:
-    #     break
+    if arduinoData == 'u':
+        alreadyDetected.append('U')
+        permutation['U'] = faceDetected
 
-    # elif keyPressed == ord('u'):
-    #     alreadyDetected.append('U')
-    #     permutation['U'] = faceDetected
+    elif arduinoData == 'r':
+        alreadyDetected.append('R')
+        permutation['R'] = faceDetected
 
-    # elif keyPressed == ord('r'):
-    #     alreadyDetected.append('R')
-    #     permutation['R'] = faceDetected
+    elif arduinoData == 'l':
+        alreadyDetected.append('L')
+        permutation['L'] = faceDetected
 
-    # elif keyPressed == ord('l'):
-    #     alreadyDetected.append('L')
-    #     permutation['L'] = faceDetected
+    elif arduinoData == 'd':
+        alreadyDetected.append('D')
+        permutation['D'] = faceDetected
 
-    # elif keyPressed == ord('d'):
-    #     alreadyDetected.append('D')
-    #     permutation['D'] = faceDetected
+    elif arduinoData == 'f':
+        alreadyDetected.append('F')
+        permutation['F'] = faceDetected
 
-    # elif keyPressed == ord('f'):
-    #     alreadyDetected.append('F')
-    #     permutation['F'] = faceDetected
-
-    # elif keyPressed == ord('b'):
-    #     alreadyDetected.append('B')
-    #     permutation['B'] = faceDetected
-
-    elif keyPressed == ord('\r'):
-        if len(set(alreadyDetected)) == 6:
-            try:
-                solution = kociemba.solve(serializeInput(permutation))
-
-                if solution:
-                    print(solution)
-                    print(serializeOutput(solution))
-
-                    arduinoPort.write(serializeOutput(solution).encode())
-
-            except:
-                print("Detection error")
-        else:
-            print("You need to scan all sides")
+    elif arduinoData == 'b':
+        alreadyDetected.append('B')
+        permutation['B'] = faceDetected
 
     cv2.imshow('Cube scheme', preview)
     cv2.imshow('Detection', cam[0:500, 0:500])
-
 
 cv2.destroyAllWindows()
