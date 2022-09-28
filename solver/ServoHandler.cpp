@@ -98,6 +98,7 @@ void ServoHandler::flipRight(int numberOfTimes)
 
 void ServoHandler::initialiseScan()
 {
+    digitalWrite(LED_PIN, HIGH);
     basePosition2();
     delay(_waitScan);
     Serial.println("u");
@@ -126,6 +127,7 @@ void ServoHandler::initialiseScan()
     basePosition2();
     delay(_waitScan);
     Serial.println("d");
+    digitalWrite(LED_PIN, LOW);
 
     basePosition1();
     armFlip();

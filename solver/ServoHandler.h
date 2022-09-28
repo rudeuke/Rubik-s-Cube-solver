@@ -1,6 +1,8 @@
 #ifndef ServoHandler_h
 #define ServoHandler_h
 
+const int LED_PIN = 12;
+
 class ServoHandler
 {
 public:

@@ -11,6 +11,8 @@ void setup()
 {
     Serial.begin(9600);
 
+    pinMode(LED_PIN, OUTPUT); 
+
     ROTATION_SERVO.servo.attach(ROTATION_SERVO.pin);
     ROTATION_SERVO.servo.write(ROTATION_SERVO.angle1);
 
