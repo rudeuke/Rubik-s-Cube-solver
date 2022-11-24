@@ -1,11 +1,11 @@
-import cube
+import scanner
 
 
 def serialize_input(permutation):
     serialized = ''
     for i in permutation:
         for j in permutation[i]:
-            serialized += cube.COLOR_TO_FACE[j]
+            serialized += scanner.my_cube.color_to_face[j]
 
     return serialized
 
