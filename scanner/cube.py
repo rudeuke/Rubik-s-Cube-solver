@@ -3,6 +3,16 @@ import serialization
 import serial_data_transfer
 
 
+FACE_TO_COLOR = {
+    'U': 'W',
+    'R': 'R',
+    'F': 'G',
+    'D': 'Y',
+    'L': 'O',
+    'B': 'B',
+}
+
+
 class Cube:
     permutation = {}
     color_to_face = {}

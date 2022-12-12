@@ -1,4 +1,5 @@
 import cv2
+import shared_variables
 import serial_data_transfer
 
 
@@ -23,11 +24,11 @@ def apply_detection():
 def detect_cube_automatically():
     arduino_data = serial_data_transfer.receive()
 
-    if arduino_data:
+    if arduino_data.isalpha() or arduino_data.isdigit():
         detect_face(arduino_data)
 
 
 def detect_face(face):
-    from scanner import my_cube, face_detected
     already_detected.append(face.upper())
-    my_cube.permutation[face.upper()] = face_detected
+    shared_variables.my_cube.permutation[face.upper(
+    )] = shared_variables.face_detected
