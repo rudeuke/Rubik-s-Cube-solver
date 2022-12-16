@@ -12,6 +12,6 @@ MyServo::MyServo(Servo servo, int pin, int angle1, int angle2)
 Servo rotation;
 Servo block;
 Servo flip;
-MyServo ROTATION_SERVO = MyServo(rotation, 9, 19, 115);
+MyServo ROTATION_SERVO = MyServo(rotation, 9, 13, 109);
 MyServo BLOCK_SERVO = MyServo(block, 10, 50, 128);
 MyServo FLIP_SERVO = MyServo(flip, 11, 20, 75);

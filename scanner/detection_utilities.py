@@ -26,6 +26,7 @@ def detect_cube_automatically():
 
     if arduino_data.isalpha() or arduino_data.isdigit():
         detect_face(arduino_data)
+        print(f"Face detected: {arduino_data.upper()}")
 
 
 def detect_face(face):
