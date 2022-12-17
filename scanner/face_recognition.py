@@ -174,16 +174,17 @@ def get_detected_face(hsv_frame):
 
 
 def detect_color(h, s, v):
-    if 170 < h or h <= 5:
-        return 'R'
-    elif 5 < h <= 25:
-        return 'O'
-    elif 25 < h <= 50:
-        return 'Y'
-    elif 65 < h <= 87:
-        return 'G'
-    elif 87 < h <= 110:
-        if s > 230:
-            return 'B'
+    if s > 80:
+        if 170 < h or h <= 5:
+            return 'R'
+        elif 5 < h <= 25:
+            return 'O'
+        elif 25 < h <= 50:
+            return 'Y'
+        elif 65 < h <= 87:
+            return 'G'
+        elif 87 < h <= 110:
+            if s > 230:
+                return 'B'
 
     return 'W'

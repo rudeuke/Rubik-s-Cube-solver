@@ -14,15 +14,17 @@ void Cube::scan()
 void Cube::solve(String moves)
 {
     int numberOfMoves = (int)moves.length() - 1;
-    Serial.print("Number of moves: ");
-    Serial.println(numberOfMoves);
-    Serial.print("Moves: ");
-    for (int i = 0; i < numberOfMoves; i++)
-    {
-        Serial.print(moves[i]);
-        Serial.print(" ");
-    }
-    Serial.println();
+
+    // Uncomment to print moves
+    // Serial.print("Number of moves: ");
+    // Serial.println(numberOfMoves);
+    // Serial.print("Moves: ");
+    // for (int i = 0; i < numberOfMoves; i++)
+    // {
+    //     Serial.print(moves[i]);
+    //     Serial.print(" ");
+    // }
+    // Serial.println();
 
     for (int i = 0; i < numberOfMoves; i++)
     {

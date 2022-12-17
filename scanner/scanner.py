@@ -44,6 +44,7 @@ while True:
     if is_detected:
         print("All faces detected. Starting solving...")
         shared_variables.my_cube.try_solve()
+        is_detected = False
 
     cv2.imshow('Cube scheme', interface.preview)
     cv2.imshow('Detection', frame[0:500, 0:500])
