@@ -1,16 +1,7 @@
 import kociemba
 import serialization
+import face_recognition
 import serial_data_transfer
-
-
-FACE_TO_COLOR = {
-    'U': 'W',
-    'R': 'R',
-    'F': 'G',
-    'D': 'Y',
-    'L': 'O',
-    'B': 'B',
-}
 
 
 class Cube:
@@ -48,3 +39,9 @@ class Cube:
 
         except:
             print("Solving error")
+
+    def update_orientation(self):
+        first_face = self.permutation['U'][4]
+        second_face = self.permutation['F'][4]
+        self.color_to_face = face_recognition.determine_orientation(
+            first_face, second_face)

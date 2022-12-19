@@ -1,4 +1,3 @@
-import cube
 import shared_variables
 
 
@@ -22,13 +21,11 @@ def serialize_output(algorithm):
 
 def serialize_move(move):
     simple_move = move[0]
-    color_to_be_moved = cube.FACE_TO_COLOR[simple_move]
-    oriented_move = shared_variables.my_cube.color_to_face[color_to_be_moved]
 
     if '\'' in move:
-        oriented_move = oriented_move.lower()
+        simple_move = simple_move.lower()
 
     if '2' in move:
-        oriented_move = chr(ord(oriented_move) + 1)
+        simple_move = chr(ord(simple_move) + 1)
 
-    return oriented_move
+    return simple_move

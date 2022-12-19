@@ -1,10 +1,7 @@
 import interface_stickers
 
 
-def determine_orientation():
-    first_face = None
-    second_face = None
-
+def determine_orientation(first_face, second_face):
     color_to_face = {
         'W': 'U',
         'R': 'R',

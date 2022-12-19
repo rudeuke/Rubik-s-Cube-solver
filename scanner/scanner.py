@@ -43,6 +43,7 @@ while True:
 
     if is_detected:
         print("All faces detected. Starting solving...")
+        shared_variables.my_cube.update_orientation()
         shared_variables.my_cube.try_solve()
         is_detected = False
 
