@@ -1,3 +1,4 @@
+import random
 import kociemba
 import serialization
 import face_recognition
@@ -32,9 +33,9 @@ class Cube:
                 serialization.serialize_input(self.permutation))
 
             if solution:
+                print("Solving...")
                 print(solution)
                 serialized_solution = serialization.serialize_output(solution)
-                print(serialized_solution)
                 serial_data_transfer.send(serialized_solution)
 
         except:
@@ -45,3 +46,26 @@ class Cube:
         second_face = self.permutation['F'][4]
         self.color_to_face = face_recognition.determine_orientation(
             first_face, second_face)
+
+    def get_random_algorithm(self, number_of_moves=10):
+        algorithm = ''
+        last_move = ' '
+        moves = ['U', 'U\'', 'U2', 'D', 'D\'', 'D2', 'L', 'L\'', 'L2',
+                 'R', 'R\'', 'R2', 'F', 'F\'', 'F2', 'B', 'B\'', 'B2']
+
+        for _ in range(number_of_moves):
+            move = random.choice(moves)
+            while last_move[0] in move:
+                move = random.choice(moves)
+
+            algorithm += move + ' '
+            last_move = move
+
+        return algorithm
+
+    def scramble(self, number_of_moves=10):
+        algorithm = self.get_random_algorithm(number_of_moves)
+        print(f"Scrambling...")
+        print(algorithm)
+        serialized_algorithm = serialization.serialize_output(algorithm)
+        serial_data_transfer.send(serialized_algorithm)

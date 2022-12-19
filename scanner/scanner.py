@@ -32,6 +32,8 @@ while True:
         if key == '1':
             serial_data_transfer.send('1')
             print("Scanning initiated")
+        elif key == '2':
+            shared_variables.my_cube.scramble()
         elif key == '\r':
             is_detected = detection_utilities.apply_detection()
         elif key in ('F', 'B', 'L', 'R', 'U', 'D'):
@@ -42,7 +44,7 @@ while True:
     detection_utilities.detect_cube_automatically()
 
     if is_detected:
-        print("All faces detected. Starting solving...")
+        print("All faces detected")
         shared_variables.my_cube.update_orientation()
         shared_variables.my_cube.try_solve()
         is_detected = False
