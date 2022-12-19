@@ -179,7 +179,7 @@ def detect_color(h, s, v):
             return 'R'
         elif 5 < h <= 25:
             return 'O'
-        elif 25 < h <= 50:
+        elif 25 < h <= 60:
             return 'Y'
         elif 65 < h <= 87:
             return 'G'

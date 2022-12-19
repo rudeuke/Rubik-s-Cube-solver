@@ -58,7 +58,7 @@ void ServoHandler::turnClockwise(int numberOfTimes)
     for (int i = 0; i < numberOfTimes; i++)
     {
         blockCube();
-        basePosition2(13);
+        basePosition2(7);
         basePosition2();
         unblockCube();
         basePosition1();
@@ -72,7 +72,7 @@ void ServoHandler::turnCounterclockwise(int numberOfTimes)
         basePosition2();
         delay(_waitShort);
         blockCube();
-        basePosition1(5);
+        basePosition1(7);
         basePosition1();
         unblockCube();
     }
