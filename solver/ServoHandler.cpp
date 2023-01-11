@@ -46,7 +46,7 @@ void ServoHandler::armFlip()
     delay(_waitVeryShort);
     for (int j = FLIP_SERVO.angle1; j < FLIP_SERVO.angle2; j++)
     { // for slower movement of flip arm
-        delay(7);
+        delay(6);
         FLIP_SERVO.servo.write(j);
     }
     FLIP_SERVO.servo.write(FLIP_SERVO.angle1);

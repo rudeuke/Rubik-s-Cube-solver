@@ -17,12 +17,3 @@ private:
 };
 
 #endif
-
-// orientation of cube --- _orientation[_color] = face
-// COLOR     INDEX   STARTING FACE
-// White      0       Up
-// Red        1       Right
-// Green      2       Front
-// Yellow     3       Down
-// Orange     4       Left
-// Blue       5       Back
