@@ -32,14 +32,14 @@ class Cube:
             solution = kociemba.solve(
                 serialization.serialize_input(self.permutation))
 
-            if solution:
-                print("Solving...")
-                print(solution)
-                serialized_solution = serialization.serialize_output(solution)
-                serial_data_transfer.send(serialized_solution)
-
         except:
             print("Solving error")
+
+        else:
+            print("Solving...")
+            print(solution)
+            serialized_solution = serialization.serialize_output(solution)
+            serial_data_transfer.send(serialized_solution)
 
     def update_orientation(self):
         first_face = self.permutation['U'][4]
